@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .off {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="resulting">Test</h1>
+
+
+    <script>
+
+        let xhr = new XMLHttpRequest();
+
+        xhr.open("GET", "quiz.json")
+        xhr.responseType = "json"
+        xhr.send()
+
+        xhr.onload = function () {
+            console.log('Response loaded: ' + xhr.response);
+            let quiz = xhr.response
+
+
+
+            //  ==============================================================================================
+            document.body.innerHTML += ' <br><br> <button id="result"> Find out the result </button>'
+            document.body.innerHTML += '  <button id="reset"> Reset questions and refresh the page </button>'
+            document.body.innerHTML += ' <br><br> <button id="result-unl"> Unlimited result LIVE </button>'
+            // ================================================================================================
+
+            // Butoanele blochează tot codul dacă le pun în partea de jos
+            // Aceste butoane mai au 2 părți. una de variabile și una de eveniment
+
+
+
+
+            document.body.innerHTML += '<h2> Question 1: ' + quiz.quiz.q1.question + '</h2>'
+            for (let i = 0; i < quiz.quiz.q1.options.length; i++) {
+                document.body.innerHTML += '<input name="q1options" type="radio" value="q1-' + quiz.quiz.q1.options[i].length + '" id="q1-' + quiz.quiz.q1.options[i].length + '">'
+                document.body.innerHTML += '<label for="q1-' + quiz.quiz.q1.options[i].length + '">' + quiz.quiz.q1.options[i] + ' </label> <br>'
+            }
+            // document.body.innerHTML += '<h3>' + quiz.quiz.q1.answer + '</h3>'
+
+
+            document.body.innerHTML += '<h2> Question 2: ' + quiz.quiz.q2.question + '</h2>'
+            for (let i = 0; i < quiz.quiz.q2.options.length; i++) {
+                document.body.innerHTML += '<input name="q2options" type="radio" value="q2-' + quiz.quiz.q2.options[i] + '" id="q2-' + quiz.quiz.q2.options[i] + '">'
+                document.body.innerHTML += '<label for="q2-' + quiz.quiz.q2.options[i] + '">' + quiz.quiz.q2.options[i] + ' </label> <br>'
+            }
+            // document.body.innerHTML += '<h3>' + quiz.quiz.q2.answer + '</h3>'
+
+
+            document.body.innerHTML += '<h2> Question 3: ' + quiz.quiz.q3.question + '</h2>'
+            for (let i = 0; i < quiz.quiz.q3.options.length; i++) {
+
+                document.body.innerHTML += '<input name="q3options" type="radio" value="q3-' + quiz.quiz.q3.options[i] + '" id="q3-' + quiz.quiz.q3.options[i] + '">'
+                document.body.innerHTML += '<label for="q3-' + quiz.quiz.q3.options[i] + '">' + quiz.quiz.q3.options[i] + ' </label> <br>'
+
+            }
+            // document.body.innerHTML += '<h3>' + quiz.quiz.q3.answer + '</h3>'
+
+
+            document.body.innerHTML += '<h2> Question 4: ' + quiz.quiz.q4.question + '</h2>'
+            for (let i = 0; i < quiz.quiz.q4.options.length; i++) {
+                document.body.innerHTML += '<input name="q4options" type="radio" value="q4-' + quiz.quiz.q4.options[i].split(' ') + '" id="q4-' + quiz.quiz.q4.options[i].split(' ') + '">'
+                document.body.innerHTML += '<label for="q4-' + quiz.quiz.q4.options[i].split(' ') + '">' + quiz.quiz.q4.options[i] + ' </label> <br>'
+            }
+            // document.body.innerHTML += '<h3>' + quiz.quiz.q4.answer + '</h3>'
+
+
+
+            //   ===================================================  -  funcționează
+
+            // document.body.innerHTML += '<h3 id:"result-q"> You got  questions right </h3>'
+            //   ===================================================  Variaile butoane
+
+
+
+
+
+            // Se află variabilele de la cele 4 răspunsuri, vom folosi un eveniment la fiecare variabilă
+            //  evenimentul se activează la click pe variabila cu id-ul respectiv și el va stoca în localStorage valoarea
+
+
+            //   ===================================================  -  funcționează
+            var resultPoint = document.getElementById('result')
+            var resetPoint = document.getElementById('reset')
+            var resultQuest = document.getElementById('resulting')
+            var resultUnlimited = document.getElementById('result-unl')
+            //   ===================================================  Variaile butoane
+            // Variaile butoane
+
+
+            // --------------------  variabilele întrebarea 1  --------------------
+
+            var q1Option1 = document.getElementById('q1-14')
+            var q1Option2 = document.getElementById('q1-17')
+            var q1Option3 = document.getElementById('q1-21')
+            var q1Option4 = document.getElementById('q1-13')
+
+
+
+            // --------------------  variabilele întrebarea 2  --------------------
+
+            var q2Option1 = document.getElementById('q2-Hindi')
+            var q2Option2 = document.getElementById('q2-Mandarin')
+            var q2Option3 = document.getElementById('q2-Nepalese')
+            var q2Option4 = document.getElementById('q2-Thai')
+
+
+
+            // --------------------  variabilele întrebarea 3  --------------------
+
+            var q3Option1 = document.getElementById('q3-Berlin')
+            var q3Option2 = document.getElementById('q3-Paris')
+            var q3Option3 = document.getElementById('q3-Rome')
+            var q3Option4 = document.getElementById('q3-London')
+
+
+
+            // --------------------  variabilele întrebarea 4  --------------------
+
+            var q4Option1 = document.getElementById('q4-Pablo,Picasso')
+            var q4Option2 = document.getElementById('q4-Vincent,van,Gogh')
+            var q4Option3 = document.getElementById('q4-Salvador,Dalí')
+            var q4Option4 = document.getElementById('q4-Edgar,Degas')
+
+
+            // scorul întrebărilor
+            var arry = [0, 0, 0, 0]
+
+
+
+
+
+
+
+            //  -------------------- ----------------------------------------------------  --------------------
+            //  -------------------- introduce răspunsurile în memoria locală  -------------------- funcționează
+            //  -------------------- ----------------------------------------------------  --------------------
+
+
+
+            //  ----------------  Reține răspunsul la Întrebarea 1      -------------------------
+
+            q1Option1.addEventListener("click", function () {
+                localStorage.setItem("question1", "q1-14")
+                // funcția settimeout nu funcționează dacă se încarcă pagina cu răspunsurile pregătite
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option1.id == localStorage.getItem("question1")) {
+                            arry[0] = 0
+                        }
+                    }, 500)
+                })
+            })
+            q1Option2.addEventListener("click", function () {
+                localStorage.setItem("question1", "q1-17")
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option2.id == localStorage.getItem("question1")) {
+                            arry[0] = 0
+                        }
+                    }, 500)
+                })
+            })
+            q1Option3.addEventListener("click", function () {
+                localStorage.setItem("question1", "q1-21")
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option3.id == localStorage.getItem("question1")) {
+                            arry[0] = 0
+                        }
+                    }, 500)
+                })
+            })
+            q1Option4.addEventListener("click", function () {
+                localStorage.setItem("question1", "q1-13")
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option4.id == localStorage.getItem("question1")) {
+                            arry[0] = 1
+                        }
+                    }, 500)
+                })
+            })
+
+
+
+            //  ----------------  Reține răspunsul la Întrebarea 2      -------------------------
+
+            q2Option1.addEventListener("click", function () {
+                localStorage.setItem("question2", "q2-Hindi")
+                setTimeout(function () {
+                    if (q2Option1.id == localStorage.getItem("question2")) {
+                        arry[1] = 1
+                    }
+                }, 500)
+            })
+            q2Option2.addEventListener("click", function () {
+                localStorage.setItem('question2', "q2-Mandarin")
+                setTimeout(function () {
+                    if (q2Option2.id == localStorage.getItem("question2")) {
+                        arry[1] = 0
+                    }
+                }, 500)
+            })
+            q2Option3.addEventListener("click", function () {
+                localStorage.setItem('question2', "q2-Nepalese")
+                setTimeout(function () {
+                    if (q2Option3.id == localStorage.getItem("question2")) {
+                        arry[1] = 0
+                    }
+                }, 500)
+            })
+            q2Option4.addEventListener("click", function () {
+                localStorage.setItem('question2', "q2-Thai")
+                setTimeout(function () {
+                    if (q2Option4.id == localStorage.getItem("question2")) {
+                        arry[1] = 0
+                    }
+                }, 500)
+            })
+
+
+
+            //  -----------------------  Reține răspunsul la Întrebarea 3     ---------------------------------
+
+            q3Option1.addEventListener("click", function () {
+                localStorage.setItem("question3", "q3-Berlin")
+                setTimeout(function () {
+                    if (q3Option1.id == localStorage.getItem("question3")) {
+                        arry[2] = 1
+                    }
+                }, 500)
+            })
+            q3Option2.addEventListener("click", function () {
+                localStorage.setItem('question3', "q3-Paris")
+                setTimeout(function () {
+                    if (q3Option2.id == localStorage.getItem("question3")) {
+                        arry[2] = 0
+                    }
+                }, 500)
+            })
+
+            q3Option3.addEventListener("click", function () {
+                localStorage.setItem('question3', "q3-Rome")
+                setTimeout(function () {
+                    if (q3Option3.id == localStorage.getItem("question3")) {
+                        arry[2] = 0
+                    }
+                }, 500)
+            })
+            q3Option4.addEventListener("click", function () {
+                localStorage.setItem('question3', "q3-London")
+                setTimeout(function () {
+                    if (q3Option4.id == localStorage.getItem("question3")) {
+                        arry[2] = 0
+                    }
+                }, 500)
+            })
+
+
+
+            //  --------------------  Reține răspunsul la Întrebarea 4     --------------------------------
+
+            q4Option1.addEventListener("click", function () {
+                localStorage.setItem("question4", "q4-Pablo,Picasso")
+                setTimeout(function () {
+                    if (q4Option1.id == localStorage.getItem("question4")) {
+                        arry[3] = 1
+                    }
+                }, 500)
+            })
+            q4Option2.addEventListener("click", function () {
+                localStorage.setItem('question4', "q4-Vincent,van,Gogh")
+                setTimeout(function () {
+                    if (q4Option2.id == localStorage.getItem("question4")) {
+                        arry[3] = 0
+                    }
+                }, 500)
+            })
+            q4Option3.addEventListener("click", function () {
+                localStorage.setItem('question4', "q4-Salvador,Dalí")
+                setTimeout(function () {
+                    if (q4Option3.id == localStorage.getItem("question4")) {
+                        arry[3] = 0
+                    }
+                }, 500)
+            })
+            q4Option4.addEventListener("click", function () {
+                localStorage.setItem('question4', "q4-Edgar,Degas")
+                setTimeout(function () {
+                    if (q4Option4.id == localStorage.getItem("question4")) {
+                        arry[3] = 0
+                    }
+                }, 500)
+            })
+
+
+
+
+
+
+
+
+            //  -------------------- ----------------------------------------------------  --------------------
+            //  -------------------- Descarc  răspunsurile obținute din spațiul de stocare  -------------------- funcționează
+            //  -------------------- ----------------------------------------------------  --------------------
+
+
+            // -------------- descarc răspunsul de la întrebarea 1  --------------
+            if (q1Option1.id == localStorage.getItem("question1")) {
+                q1Option1.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option1.id == localStorage.getItem("question1")) {
+                            arry[0] = 0
+                        }
+                    }, 500)
+                })
+            }
+            if (q1Option2.id == localStorage.getItem("question1")) {
+                q1Option2.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option2.id == localStorage.getItem("question1")) {
+                            arry[0] = 0
+                        }
+                    }, 500)
+                })
+            }
+            if (q1Option3.id == localStorage.getItem("question1")) {
+                q1Option3.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option3.id == localStorage.getItem("question1")) {
+                            arry[0] = 0
+                        }
+                    }, 500)
+                })
+            }
+            if (q1Option4.id == localStorage.getItem("question1")) {
+                q1Option4.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    setTimeout(function () {
+                        if (q1Option4.id == localStorage.getItem("question1")) {
+                            arry[0] = 1
+                        }
+                    }, 500)
+                })
+            }
+
+            // -------------- descarc răspunsul de la întrebarea 2  --------------
+
+            if (q2Option1.id == localStorage.getItem("question2")) {
+                q2Option1.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q2Option1.id == localStorage.getItem("question2")) {
+                        arry[1] = 1
+                    }
+                }, 500)
+            }
+            if (q2Option2.id == localStorage.getItem("question2")) {
+                q2Option2.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q2Option2.id == localStorage.getItem("question2")) {
+                        arry[1] = 0
+                    }
+                }, 500)
+            }
+            if (q2Option3.id == localStorage.getItem("question2")) {
+                q2Option3.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q2Option3.id == localStorage.getItem("question2")) {
+                        arry[1] = 0
+                    }
+                }, 500)
+            }
+            if (q2Option4.id == localStorage.getItem("question2")) {
+                q2Option4.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q2Option4.id == localStorage.getItem("question2")) {
+                        arry[1] = 0
+                    }
+                }, 500)
+            }
+
+            // ---------- descarc răspunsul de la întrebarea 3  ----------
+
+            if (q3Option1.id == localStorage.getItem("question3")) {
+                q3Option1.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q3Option1.id == localStorage.getItem("question3")) {
+                        arry[2] = 1
+                    }
+                }, 500)
+            }
+            if (q3Option2.id == localStorage.getItem("question3")) {
+                q3Option2.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q3Option2.id == localStorage.getItem("question3")) {
+                        arry[2] = 0
+                    }
+                }, 500)
+            }
+            if (q3Option3.id == localStorage.getItem("question3")) {
+                q3Option3.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q3Option3.id == localStorage.getItem("question3")) {
+                        arry[2] = 0
+                    }
+                }, 500)
+            }
+            if (q3Option4.id == localStorage.getItem("question3")) {
+                q3Option4.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q3Option4.id == localStorage.getItem("question3")) {
+                        arry[2] = 0
+                    }
+                }, 500)
+            }
+
+            // ---------- descarc răspunsul de la întrebarea 4  ----------
+
+            if (q4Option1.id == localStorage.getItem("question4")) {
+                q4Option1.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q4Option1.id == localStorage.getItem("question4")) {
+                        arry[3] = 1
+                    }
+                }, 500)
+            }
+            if (q4Option2.id == localStorage.getItem("question4")) {
+                q4Option2.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q4Option2.id == localStorage.getItem("question4")) {
+                        arry[3] = 0
+                    }
+                }, 500)
+            }
+            if (q4Option3.id == localStorage.getItem("question4")) {
+                q4Option3.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q4Option3.id == localStorage.getItem("question4")) {
+                        arry[3] = 0
+                    }
+                }, 500)
+            }
+            if (q4Option4.id == localStorage.getItem("question4")) {
+                q4Option4.setAttribute('checked', 'checked')
+                setTimeout(function () {
+                    if (q4Option4.id == localStorage.getItem("question4")) {
+                        arry[3] = 0
+                    }
+                }, 500)
+            }
+
+
+
+
+
+            // Functia live
+            function autoAdd() {
+                a = arry[0]
+                b = arry[1]
+                c = arry[2]
+                d = arry[3]
+                rpoint = a + b + c + d
+
+                resultQuest.innerHTML = '!  You got ' + rpoint + ' questions right </h3>'
+                console.log("autoAdd response 200ms : " + arry)
+            }
+
+
+
+            //   ===================================================  -  funcționează
+            // funcția aceasta este legată de butonul find out the rezult și se poate folosi o singură dată
+            result.addEventListener("click", function () {
+
+                console.log(arry)
+                console.log(arry[0] + arry[1] + arry[2] + arry[3])
+                a = arry[0]
+                b = arry[1]
+                c = arry[2]
+                d = arry[3]
+                rpoint = a + b + c + d
+
+                resultQuest.innerHTML += '!  You got ' + rpoint + ' questions right </h3>'
+
+                result.classList.add("off")
+                // result.classList.remove("off")
+            })
+
+
+            resetPoint.addEventListener("click", function () {
+                localStorage.clear()
+            })
+
+            resultQuest.addEventListener("click", function () {
+                resultQuest.body.innerHTML += '!  You got' + arry[0] + arry[1] + arry[2] + arry[3] + ' questions right </h3>'
+            })
+
+            resultUnlimited.addEventListener("click", function () {
+                a = arry[0]
+                b = arry[1]
+                c = arry[2]
+                d = arry[3]
+                rpoint = a + b + c + d
+
+                resultQuest.innerHTML = '!  You got ' + rpoint + ' questions right </h3>'
+
+                // resultQuest.body.innerHTML = '!  You got' + arry[0] + arry[1] + arry[2] + arry[3] + ' questions right </h3>'
+
+                // result.classList.add("off")
+                // result.classList.remove("off")
+                setInterval(autoAdd, 200)
+            })
+
+
+
+            // setInterval(resultQuest, 1500)
+
+            //   ===================================================  evenimente butoane
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //  -------------------- ----------------------------------------------------  --------------------
+            //  -------------------- Funcție de verificare  -------------------- funcționează
+            //  -------------------- ----------------------------------------------------  --------------------
+            // supranumită de mine funcție LIVE ... 
+
+
+            console.log(arry)
+            function pointScor() {
+
+                console.log(arry)
+
+            }
+            var point = 0
+
+            setInterval(pointScor, 1500)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        }; xhr.onerror = function () {
+            console.log('Network Error');
+        };
+        xhr.onprogress = function (event) {
+            console.log('Received ' + event.loaded + ' of ' + event.total);
+        };
+
+
+
+    </script>
+
+</body>
+
+</html>
